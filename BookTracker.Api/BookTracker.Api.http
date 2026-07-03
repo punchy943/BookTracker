@@ -2,6 +2,15 @@
 
 
 
-###
+### Get Books
 GET http://localhost:5125/books
 
+### Create Book
+POST http://localhost:5125/books
+Content-Type: application/json
+
+{
+  "title": "Dune",
+  "author": "Frank Herbert",
+  "year": 1965
+}

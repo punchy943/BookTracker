@@ -15,11 +15,11 @@ public class BookListTests
         var client = factory.CreateClient();
         
         var response = await client.GetAsync("/books");
-        var books = await response.Content.ReadFromJsonAsync<List<BookInfo>>();
+        var result = await response.Content.ReadFromJsonAsync<List<BookInfo>>();
         
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        Assert.NotNull(books);
-        Assert.Empty(books);
+        Assert.NotNull(result);
+        Assert.Empty(result); 
     }
 }
