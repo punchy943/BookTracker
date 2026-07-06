@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using BookTracker.Api.Application.BookList;
 using BookTracker.Api.Domain;
+using QuickPulse.Show;
 
 namespace BookTracker.Api.Tests.IntegrationTests.BookList;
 
