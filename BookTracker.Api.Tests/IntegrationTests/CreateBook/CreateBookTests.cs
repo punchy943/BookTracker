@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using BookTracker.Api.Application.CreateBook;
-using Microsoft.AspNetCore.Mvc.Testing;
+using BookTracker.Api.Domain;
 
 namespace BookTracker.Api.Tests.IntegrationTests.CreateBook;
 
@@ -20,7 +20,7 @@ public class CreateBookTests
                 Author = "Carson McCullers",
                 Year = 1940
             };
-        
+
         var response = await client.PostAsJsonAsync("/books", request);
         var result = await response.Content.ReadFromJsonAsync<CreateBookResponse>();
 
@@ -28,5 +28,13 @@ public class CreateBookTests
         Assert.NotNull(result);
         Assert.True(result.Id > 0);
         Assert.Equal("The Heart Is a Lonely Hunter", result.Title);
+
+        var reader = factory.GetReader();
+        var book = reader.Query(context => context.Find<Book>(result.Id));
+
+        Assert.NotNull(book);
+        Assert.Equal("The Heart Is a Lonely Hunter", book.Title);
+        Assert.Equal("Carson McCullers", book.Author);
+        Assert.Equal(1940, book.Year);
     }
 }

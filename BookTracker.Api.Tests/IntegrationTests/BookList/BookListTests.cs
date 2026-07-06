@@ -1,8 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using BookTracker.Api.Application.BookList;
-using Microsoft.AspNetCore.Mvc.Testing;
-using QuickFuzzr;
+using BookTracker.Api.Domain;
 
 namespace BookTracker.Api.Tests.IntegrationTests.BookList;
 
@@ -13,14 +12,26 @@ public class BookListTests
     [Fact]
     public async Task GetBooksReturnsBooks()
     {
+        var writer = factory.GetWriter();
+        writer.Seed(db => db.Books.Add(
+            new Book
+            {
+                Title = "Cannery Row",
+                Author = "John Steinbeck",
+                Year = 1945
+            }
+        ));
         var client = factory.CreateClient();
-        
+
         var response = await client.GetAsync("/books");
         var result = await response.Content.ReadFromJsonAsync<List<BookInfo>>();
-        
+
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         Assert.NotNull(result);
-        Assert.Empty(result); 
+
+        var bookInfo = Assert.Single(result);
+        Assert.Equal("Cannery Row", bookInfo.Title);
+        Assert.Equal("John Steinbeck", bookInfo.Author);
     }
 }
