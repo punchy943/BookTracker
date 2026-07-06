@@ -19,7 +19,7 @@ Content-Type: application/json
 DELETE http://localhost:5125/books/1
 
 ### Update Book
-PUT http://localhost:5125/books/1
+PUT http://localhost:5125/books/2
 Content-Type: application/json
 
 {
@@ -27,5 +27,8 @@ Content-Type: application/json
   "author": "David Bowie",
   "year": 1971
 }
+
+### Get Book by Id
+GET http://localhost:5125/books/1
 
 
