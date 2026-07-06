@@ -16,4 +16,16 @@ Content-Type: application/json
 }
 
 ### Delete Book
-DELETE http://localhost:5125/books/5
+DELETE http://localhost:5125/books/1
+
+### Update Book
+PUT http://localhost:5125/books/1
+Content-Type: application/json
+
+{
+  "title": "Changes",
+  "author": "David Bowie",
+  "year": 1971
+}
+
+
