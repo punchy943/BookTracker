@@ -5,14 +5,11 @@ using BookTracker.Api.Domain;
 
 namespace BookTracker.Api.Tests.IntegrationTests.CreateBook;
 
-public class CreateBookTests
+public class CreateBookTests : IntegrationTest
 {
-    private readonly CustomWebApplicationFactory factory = new();
-
     [Fact]
     public async Task PostBookCreatesBook()
     {
-        var client = factory.CreateClient();
         var request =
             new CreateBookRequest
             {
@@ -21,7 +18,7 @@ public class CreateBookTests
                 Year = 1940
             };
 
-        var response = await client.PostAsJsonAsync("/books", request);
+        var response = await Client.PostAsJsonAsync("/books", request);
         var result = await response.Content.ReadFromJsonAsync<CreateBookResponse>();
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
@@ -29,8 +26,7 @@ public class CreateBookTests
         Assert.True(result.Id > 0);
         Assert.Equal("The Heart Is a Lonely Hunter", result.Title);
 
-        var reader = factory.GetReader();
-        var book = reader.Query(context => context.Find<Book>(result.Id));
+        var book = Reader.Query(context => context.Find<Book>(result.Id));
 
         Assert.NotNull(book);
         Assert.Equal("The Heart Is a Lonely Hunter", book.Title);

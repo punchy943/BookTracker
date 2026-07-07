@@ -3,16 +3,12 @@ using BookTracker.Api.Domain;
 
 namespace BookTracker.Api.Tests.IntegrationTests.DeleteBook;
 
-public class DeleteBookTests
+public class DeleteBookTests : IntegrationTest
 {
-    private readonly CustomWebApplicationFactory factory = new();
-
     [Fact]
     public async Task DeleteBookRemovesBook()
     {
-        var writer = factory.GetWriter();
-
-        writer.Seed(db =>
+        Writer.Seed(db =>
         {
             db.Books.Add(
                 new Book
@@ -23,14 +19,11 @@ public class DeleteBookTests
                 });
         });
 
-        var client = factory.CreateClient();
-
-        var response = await client.DeleteAsync("/books/1");
+        var response = await Client.DeleteAsync("/books/1");
 
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
-        var reader = factory.GetReader();
-        var book = reader.Query(db => db.Books.Find(1));
+        var book = Reader.Query(db => db.Books.Find(1));
 
         Assert.Null(book);
     }
@@ -38,9 +31,7 @@ public class DeleteBookTests
     [Fact]
     public async Task DeleteBookReturnsNotFoundWhenBookDoesNotExist()
     {
-        var client = factory.CreateClient();
-
-        var response = await client.DeleteAsync("/books/9999");
+        var response = await Client.DeleteAsync("/books/9999");
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);// voeg hier een assert toe die verifiëert dat status code NotFound is.
     }
