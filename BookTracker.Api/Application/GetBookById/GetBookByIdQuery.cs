@@ -21,6 +21,5 @@ public class GetBookByIdQuery(IBookRepository bookRepository)
                 Author = book.Author.Value,
                 Year = book.Year
             };
-        // plaats hier de code die nu nog in BookService.GetBookById staat
     }
 }

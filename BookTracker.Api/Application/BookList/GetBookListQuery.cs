@@ -14,6 +14,5 @@ public class GetBookListQuery(IBookRepository bookRepository)
             Title = b.Title.Value
         });
         return [.. summary];
-        // plaats hier de code die nu nog in BookService.GetAllBooks staat
     }
 }
