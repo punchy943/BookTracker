@@ -15,8 +15,8 @@ public class UpdateBookTests : IntegrationTest
             db.Books.Add(
                 new Book
                 {
-                    Title = "Dune",
-                    Author = "Frank Herbert",
+                    Title = new BookTitle("Dune"),
+                    Author = new AuthorName("Frank Herbert"),
                     Year = 1965
                 });
         });
@@ -36,11 +36,10 @@ public class UpdateBookTests : IntegrationTest
         var book = Reader.Query(db => db.Books.Find(1));
 
         Assert.NotNull(book);
-        Assert.Equal("Dune Messiah", book.Title);
-        Assert.Equal("Frank Herbert", book.Author);
+        Assert.Equal("Dune Messiah", book.Title.Value);
+        Assert.Equal("Frank Herbert", book.Author.Value);
         Assert.Equal(1969, book.Year);
-        // voeg hier de Asserts toe die de properties van book checken
-        // gebruik de literal waarden voor de 'expected' values, bvb 1969, niet request.Year
+        
     }
 
     [Fact]

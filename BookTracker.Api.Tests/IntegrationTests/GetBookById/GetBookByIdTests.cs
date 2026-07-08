@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using BookTracker.Api.Application.GetBookById;
 using BookTracker.Api.Domain;
+using Xunit.Sdk;
 
 namespace BookTracker.Api.Tests.IntegrationTests.GetBookById;
 
@@ -15,8 +16,8 @@ public class GetBookByIdTests : IntegrationTest
             db.Books.Add(
                 new Book
                 {
-                    Title = "Dune",
-                    Author = "Frank Herbert",
+                    Title = new BookTitle("Dune"),
+                    Author = new AuthorName("Frank Herbert"),
                     Year = 1965
                 });
         });
@@ -39,9 +40,9 @@ public class GetBookByIdTests : IntegrationTest
         {
             db.Books.Add(new Book
             {
-                Title = "Dune",
-                    Author = "Frank Herbert",
-                    Year = 1965
+                Title = new BookTitle("Dune"),
+                Author = new AuthorName("Frank Herbert"),
+                Year = 1965
             });
         });
 

@@ -13,8 +13,8 @@ public class DeleteBookTests : IntegrationTest
             db.Books.Add(
                 new Book
                 {
-                    Title = "Dune",
-                    Author = "Frank Herbert",
+                    Title = new BookTitle("Dune"),
+                    Author = new AuthorName("Frank Herbert"),
                     Year = 1965
                 });
         });
@@ -33,6 +33,6 @@ public class DeleteBookTests : IntegrationTest
     {
         var response = await Client.DeleteAsync("/books/9999");
 
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);// voeg hier een assert toe die verifiëert dat status code NotFound is.
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 }
