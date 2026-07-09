@@ -19,9 +19,9 @@ public class CreateBookTests : IntegrationTest
             };
 
         var response = await Client.PostAsJsonAsync("/books", request);
-        var result = await response.Content.ReadFromJsonAsync<CreateBookResponse>();
 
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        var result = await response.ReadJsonAs<CreateBookResponse>(HttpStatusCode.Created);
+
         Assert.NotNull(result);
         Assert.True(result.Id > 0);
         Assert.Equal("The Heart Is a Lonely Hunter", result.Title);
@@ -47,6 +47,6 @@ public class CreateBookTests : IntegrationTest
 
         var response = await Client.PostAsJsonAsync("/books", request);
 
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        await response.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
     }
 }
