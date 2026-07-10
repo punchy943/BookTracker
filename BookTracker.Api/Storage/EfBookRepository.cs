@@ -1,5 +1,4 @@
 using BookTracker.Api.Domain;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookTracker.Api.Storage;
 
