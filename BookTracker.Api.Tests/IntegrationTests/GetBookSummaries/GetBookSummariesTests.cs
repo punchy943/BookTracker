@@ -1,17 +1,15 @@
 using System.Net;
 using System.Net.Http.Json;
-using BookTracker.Api.Application;
-using BookTracker.Api.Application.BookList;
+using BookTracker.Api.Application.GetBookSummaries;
 using BookTracker.Api.Domain;
-using QuickPulse.Show;
 
 namespace BookTracker.Api.Tests.IntegrationTests.BookList;
 
-public class BookListTests : IntegrationTest
+public class GetBookSummariesTests : IntegrationTest
 {
 
     [Fact]
-    public async Task GetBooksReturnsBooks()
+    public async Task GetBookSummariesReturnsBooks()
     {
         Writer.Seed(db => db.Books.Add(
             new Book
@@ -24,14 +22,14 @@ public class BookListTests : IntegrationTest
 
         var response = await Client.GetAsync("/books");
 
-        var result = await response.ReadJsonAs<PagedResult<BookInfo>>(HttpStatusCode.OK);
+        var result = await response.ReadJsonAs<GetBookSummariesResponse>(HttpStatusCode.OK);
 
         Assert.NotNull(result);
 
-        var bookInfo = Assert.Single(result.Items);
+        var BookSummary = Assert.Single(result.Items);
 
-        Assert.Equal("Cannery Row", bookInfo.Title);
-        Assert.Equal("John Steinbeck", bookInfo.Author);
+        Assert.Equal("Cannery Row", BookSummary.Title);
+        Assert.Equal("John Steinbeck", BookSummary.Author);
         Assert.Equal(1, result.Page);
         Assert.Equal(10, result.PageSize);
         Assert.Equal(1, result.TotalItems);
@@ -39,7 +37,7 @@ public class BookListTests : IntegrationTest
     }
 
     [Fact]
-    public async Task GetBooksReturnsRequestedPage()
+    public async Task GetBookSummariesReturnsRequestedPage()
     {
         Writer.Seed(db =>
         {
@@ -64,7 +62,7 @@ public class BookListTests : IntegrationTest
                 });
         });
 
-        var result = await Client.GetFromJsonAsync<PagedResult<BookInfo>>("/books?page=2&pageSize=1");
+        var result = await Client.GetFromJsonAsync<GetBookSummariesResponse>("/books?page=2&pageSize=1");
 
         Assert.NotNull(result);
 
@@ -78,7 +76,7 @@ public class BookListTests : IntegrationTest
     }
 
     [Fact]
-    public async Task GetBooksReturnsEmptyItemsWhenPageIsTooHigh()
+    public async Task GetBookSummariesReturnsEmptyItemsWhenPageIsTooHigh()
     {
         Writer.Seed(db =>
         {
@@ -91,7 +89,7 @@ public class BookListTests : IntegrationTest
                 });
         });
 
-        var result = await Client.GetFromJsonAsync<PagedResult<BookInfo>>("/books?page=99&pageSize=10");
+        var result = await Client.GetFromJsonAsync<GetBookSummariesResponse>("/books?page=99&pageSize=10");
 
         Assert.NotNull(result);
         Assert.Empty(result.Items);
@@ -102,7 +100,7 @@ public class BookListTests : IntegrationTest
     }
 
     [Fact]
-    public async Task GetBooksCanSearchByTitle()
+    public async Task GetBookSummariesCanSearchByTitle()
     {
         Writer.Seed(db =>
         {
@@ -123,7 +121,7 @@ public class BookListTests : IntegrationTest
 
         var response = await Client.GetAsync("/books?search=dune");
 
-        var result = await response.ReadJsonAs<PagedResult<BookInfo>>(HttpStatusCode.OK);
+        var result = await response.ReadJsonAs<GetBookSummariesResponse>(HttpStatusCode.OK);
 
         var book = Assert.Single(result.Items);
 
@@ -134,7 +132,7 @@ public class BookListTests : IntegrationTest
     }
 
     [Fact]
-    public async Task GetBooksAppliesPagingAfterSearch()
+    public async Task GetBookSummariesAppliesPagingAfterSearch()
     {
         Writer.Seed(db =>
         {
@@ -161,7 +159,7 @@ public class BookListTests : IntegrationTest
 
         var response = await Client.GetAsync("/books?search=dune&page=2&pageSize=1");
 
-        var result = await response.ReadJsonAs<PagedResult<BookInfo>>(HttpStatusCode.OK);
+        var result = await response.ReadJsonAs<GetBookSummariesResponse>(HttpStatusCode.OK);
 
         var book = Assert.Single(result.Items);
 
@@ -173,7 +171,7 @@ public class BookListTests : IntegrationTest
     }
 
     [Fact]
-    public async Task GetBooksWorksWhenSearchHasNoResults()
+    public async Task GetBookSummariesWorksWhenSearchHasNoResults()
     {
         Writer.Seed(db =>
         {
@@ -189,7 +187,7 @@ public class BookListTests : IntegrationTest
 
         var response = await Client.GetAsync("/books?search=dune");
 
-        var result = await response.ReadJsonAs<PagedResult<BookInfo>>(HttpStatusCode.OK);
+        var result = await response.ReadJsonAs<GetBookSummariesResponse>(HttpStatusCode.OK);
 
         Assert.Equal([], result.Items);
     }

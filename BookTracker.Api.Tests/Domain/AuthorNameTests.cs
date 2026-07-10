@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using BookTracker.Api.Domain;
 
 namespace BookTracker.Api.Tests.Domain;
