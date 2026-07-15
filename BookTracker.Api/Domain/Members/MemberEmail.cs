@@ -8,12 +8,12 @@ public record MemberEmail
 
     public MemberEmail(string value)
     {
-        var cleaned = value.Trim();
-
-        if (string.IsNullOrWhiteSpace(cleaned))
+        if (string.IsNullOrWhiteSpace(value))
         {
             throw new DomainException("Email is required.");
         }
+
+        var cleaned = value.Trim();
 
         if (cleaned.Length > MaxLength)
         {
@@ -24,7 +24,7 @@ public record MemberEmail
         {
             throw new DomainException("Email must contain '@'");
         }
-        
+
         Value = cleaned;
     }
     public static implicit operator string(MemberEmail email)
