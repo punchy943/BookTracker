@@ -8,12 +8,12 @@ public record AuthorName
 
     public AuthorName(string value)
     {
-        var cleaned = value.Trim();
-
-        if (string.IsNullOrWhiteSpace(cleaned))
+        if (string.IsNullOrWhiteSpace(value))
         {
             throw new DomainException("Author is required.");
         }
+
+        var cleaned = value.Trim(); 
 
         if (cleaned.Length > MaxLength)
         {
