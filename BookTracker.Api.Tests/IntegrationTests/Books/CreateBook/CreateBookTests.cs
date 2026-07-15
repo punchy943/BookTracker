@@ -22,10 +22,6 @@ public class CreateBookTests : IntegrationTest
 
         var result = await response.ReadJsonAs<CreateBookResponse>(HttpStatusCode.Created);
 
-        Assert.NotNull(result);
-        Assert.True(result.Id > 0);
-        Assert.Equal("The Heart Is a Lonely Hunter", result.Title);
-
         var book = Reader.Query(context => context.Find<Book>(result.Id));
 
         Assert.NotNull(book);

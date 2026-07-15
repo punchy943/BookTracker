@@ -43,4 +43,31 @@ Content-Type: application/json
 ### Get Book by Id
 GET http://localhost:5125/books/1
 
+### Get Members
+GET http://localhost:5125/members
+
+### Create Member
+POST http://localhost:5125/members
+Content-Type: application/json
+
+{
+  "name": "Ada Lovelace",
+  "email": "ada@example.com"
+}
+
+### Get Member Details
+GET http://localhost:5125/members/1
+
+### Update Member
+PUT http://localhost:5125/members/1
+Content-Type: application/json
+
+{
+  "name": "Ada Byron",
+  "email": "ada.byron@example.com"
+}
+
+### Delete Member
+DELETE http://localhost:5125/members/1
+
 

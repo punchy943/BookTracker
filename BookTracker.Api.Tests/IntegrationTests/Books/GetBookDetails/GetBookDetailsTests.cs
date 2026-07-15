@@ -7,7 +7,7 @@ namespace BookTracker.Api.Tests.IntegrationTests.Books.GetBookDetails;
 public class GetBookDetailsTests : IntegrationTest
 {
     [Fact]
-    public async Task GetBookDetailsByIdReturnsBook()
+    public async Task GetBookDetailsReturnsBook()
     {
         Writer.Seed(db =>
         {
@@ -24,7 +24,6 @@ public class GetBookDetailsTests : IntegrationTest
 
         var book = await response.ReadJsonAs<GetBookDetailsResponse>(HttpStatusCode.OK);
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(book);
         Assert.Equal(1, book.Id);
         Assert.Equal("Dune", book.Title);
@@ -33,7 +32,7 @@ public class GetBookDetailsTests : IntegrationTest
     }
 
     [Fact]
-    public async Task GetBookDetailsByIdReturnsNotFoundWhenBookDoesNotExist()
+    public async Task GetBookDetailsReturnsNotFoundWhenBookDoesNotExist()
     {
         Writer.Seed(db =>
         {
