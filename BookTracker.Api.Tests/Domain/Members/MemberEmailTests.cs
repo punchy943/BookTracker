@@ -46,4 +46,12 @@ public class MemberEmailTests
 
         Assert.Equal("Email must contain '@'", exception.Message);
     }
+
+    [Fact]
+    public void MemberEmailNormalizesValue()
+    {
+        var email = new MemberEmail("  Ada@Example.com  ");
+
+        Assert.Equal("ada@example.com", email.Value);
+    }
 }

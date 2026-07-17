@@ -46,13 +46,14 @@ GET http://localhost:5125/books/1
 ### Get Members
 GET http://localhost:5125/members
 
-### Create Member
+### Create Member With Credentials
 POST http://localhost:5125/members
 Content-Type: application/json
 
 {
   "name": "Ada Lovelace",
-  "email": "ada@example.com"
+  "email": "ada@example.com",
+  "password": "analytical-engine"
 }
 
 ### Get Member Details

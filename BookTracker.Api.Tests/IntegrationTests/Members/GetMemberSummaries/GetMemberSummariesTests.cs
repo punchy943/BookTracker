@@ -104,17 +104,20 @@ public class GetMemberSummariesTests : IntegrationTest
                 new Member
                 {
                     Name = new MemberName("Lukas Motte"),
-                    Email = new MemberEmail("lukasmotte75@gmail.com")
+                    Email = new MemberEmail("lukasmotte75@gmail.com"),
+                    PasswordHash = "test-password-hash"
                 },
                 new Member
                 {
                     Name = new MemberName("Joris Motte"),
-                    Email = new MemberEmail("jorismotte@gmail.com")
+                    Email = new MemberEmail("jorismotte@gmail.com"),
+                    PasswordHash = "test-password-hash"
                 },
                 new Member
                 {
                     Name = new MemberName("Peter-Paul"),
-                    Email = new MemberEmail("peterpaul@gmail.com")
+                    Email = new MemberEmail("peterpaul@gmail.com"),
+                    PasswordHash = "test-password-hash"
                 });
         });
 
