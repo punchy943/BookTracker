@@ -8,6 +8,8 @@ public class DeleteMemberTests : IntegrationTest
     [Fact]
     public async Task DeleteMemberDeletesMember()
     {
+        var memberId = await AuthenticateAsMember();
+
         Writer.Seed(db =>
         {
             db.Members.Add(
@@ -19,7 +21,7 @@ public class DeleteMemberTests : IntegrationTest
                 });
         });
 
-        var response = await Client.DeleteAsync("/members/1");
+        var response = await Client.DeleteAsync($"/members/{memberId}");
 
         await response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
@@ -31,8 +33,10 @@ public class DeleteMemberTests : IntegrationTest
     [Fact]
     public async Task DeleteMemberReturnsNotFoundWhenMemberDoesNotExist()
     {
-        var response = await Client.DeleteAsync("/members/1");
+        await AuthenticateAsMember();
+        
+        var response = await Client.DeleteAsync("/members/2");
 
-        await response.ShouldHaveStatusCode(HttpStatusCode.NotFound);
+        await response.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
     }
 }

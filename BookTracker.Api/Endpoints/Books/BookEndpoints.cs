@@ -13,9 +13,16 @@ public static class BookEndpoints
     {
         app.MapGet("/books", GetBookSummaries);
         app.MapGet("/books/{id:int}", GetBookDetails);
-        app.MapPost("/books", CreateBook);
-        app.MapPut("/books/{id:int}", UpdateBook);
-        app.MapDelete("/books/{id:int}", DeleteBook);
+
+        app.MapPost("/books", CreateBook)
+            .RequireAuthorization();
+
+        app.MapPut("/books/{id:int}", UpdateBook)
+            .RequireAuthorization();
+
+        app.MapDelete("/books/{id:int}", DeleteBook)
+            .RequireAuthorization();
+            
         return app;
     }
 

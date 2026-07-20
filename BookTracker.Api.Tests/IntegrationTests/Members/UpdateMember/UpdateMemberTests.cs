@@ -10,6 +10,8 @@ public class UpdateMemberTests : IntegrationTest
     [Fact]
     public async Task PutMemberUpdatesExistingMember()
     {
+        var memberId = await AuthenticateAsMember();
+
         Writer.Seed(db =>
         {
             db.Members.Add(
@@ -21,14 +23,14 @@ public class UpdateMemberTests : IntegrationTest
                 });
         });
 
-        var request = 
+        var request =
             new UpdateMemberRequest
             {
                 Name = "Peter-Paul",
                 Email = "peterpaul@gmail.com"
             };
 
-        var response = await Client.PutAsJsonAsync("/members/1", request);
+        var response = await Client.PutAsJsonAsync($"/members/{memberId}", request);
 
         await response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
@@ -40,23 +42,50 @@ public class UpdateMemberTests : IntegrationTest
     }
 
     [Fact]
-    public async Task PutMemberReturnsNotFoundWithInvalidId()
+    public async Task PutMemberReturnsForbiddenWithInvalidId()
     {
-        var request = 
+        await AuthenticateAsMember();
+
+        var request =
             new UpdateMemberRequest
             {
                 Name = "Lukas Motte",
                 Email = "lukasmotte75@gmail.com"
             };
 
-        var response = await Client.PutAsJsonAsync("/members/1", request);
+        var response = await Client.PutAsJsonAsync("/members/2", request);
 
-        await response.ShouldHaveStatusCode(HttpStatusCode.NotFound);
+        await response.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
     }
 
     [Fact]
     public async Task PutMemberReturnsBadRequestWhenEmailIsInvalid()
     {
+        var memberId = await AuthenticateAsMember();
+
+        var request =
+            new UpdateMemberRequest
+            {
+                Name = "Peter-Paul",
+                Email = "peterpaulgmail.com"
+            };
+
+        var response = await Client.PutAsJsonAsync($"/members/{memberId}", request);
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        var member = Reader.Query(db => db.Members.Find(1));
+
+        Assert.NotNull(member);
+        Assert.Equal("Ada Lovelace", member.Name);
+        Assert.Equal("ada@example.com", member.Email);
+    }
+
+    [Fact]
+    public async Task PutMemberReturnsConflictWhenEmailExist()
+    {
+        var memberId = await AuthenticateAsMember();
+
         Writer.Seed(db =>
         {
             db.Members.Add(
@@ -68,52 +97,14 @@ public class UpdateMemberTests : IntegrationTest
                 });
         });
 
-        var request = 
-            new UpdateMemberRequest
-            {
-                Name = "Peter-Paul",
-                Email = "peterpaulgmail.com"
-            };
-
-        var response = await Client.PutAsJsonAsync("/members/1", request);
-
-        await response.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
-
-        var member = Reader.Query(db => db.Members.Find(1));
-
-        Assert.NotNull(member);
-        Assert.Equal("Lukas Motte", member.Name);
-        Assert.Equal("lukasmotte75@gmail.com", member.Email);
-    }
-
-    [Fact]
-    public async Task PutMemberReturnsConflictWhenEmailExist()
-    {
-        Writer.Seed(db =>
-        {
-            db.Members.AddRange(
-                new Member
-                {
-                    Name = new MemberName("Lukas Motte"),
-                    Email = new MemberEmail("lukasmotte75@gmail.com"),
-                    PasswordHash = "test-password-hash"
-                },
-                new Member
-                {
-                    Name = new MemberName("Joris Motte"),
-                    Email = new MemberEmail("jorismotte@gmail.com"),
-                    PasswordHash = "test-password-hash"
-                });
-        });
-
-        var request = 
+        var request =
             new UpdateMemberRequest
             {
                 Name = "Joris Motte",
                 Email = "lukasmotte75@gmail.com"
             };
 
-        var response = await Client.PutAsJsonAsync("/members/2", request);
+        var response = await Client.PutAsJsonAsync($"/members/{memberId}", request);
 
         await response.ShouldHaveStatusCode(HttpStatusCode.Conflict);
     }
