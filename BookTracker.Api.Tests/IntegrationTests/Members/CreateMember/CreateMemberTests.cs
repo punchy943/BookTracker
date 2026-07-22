@@ -28,7 +28,7 @@ public class CreateMemberTests : IntegrationTest
              db.Members.Single(current => current.Id == created.Id));
 
         Assert.NotEqual("analytical-engine", member?.PasswordHash);
-        
+
         var passwordHasher = new PasswordHasher<Member>();
 
         var result = passwordHasher.VerifyHashedPassword(
@@ -37,7 +37,7 @@ public class CreateMemberTests : IntegrationTest
             "analytical-engine");
 
         Assert.Equal(PasswordVerificationResult.Success, result);
-        
+
         Assert.NotNull(member);
         Assert.Equal("Lukas Motte", member.Name.Value);
         Assert.Equal("lukasmotte75@gmail.com", member.Email.Value);
@@ -123,5 +123,37 @@ public class CreateMemberTests : IntegrationTest
         var response = await Client.PostAsJsonAsync("/members", request);
 
         await response.ShouldHaveStatusCode(HttpStatusCode.Conflict);
+    }
+
+    [Fact]
+    public async Task CreateMemberCreatesRegularMember()
+    {
+        var request =
+            new CreateMemberRequest
+            {
+                Name = "Grace Hopper",
+                Email = "grace@example.com",
+                Password = "debugging-moth"
+            };
+
+        var response =
+            await Client.PostAsJsonAsync(
+                "/members",
+                request);
+
+        var created =
+            await response
+                .ReadJsonAs<CreateMemberResponse>(
+                    HttpStatusCode.Created);
+
+        var member =
+            Reader.Query(db =>
+                db.Members.Find(created.Id));
+
+        Assert.NotNull(member);
+
+        Assert.Equal(
+            MemberRole.Member,
+            member.Role);
     }
 }

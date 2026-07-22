@@ -1,8 +1,10 @@
+using BookTracker.Api.Domain.Members;
 using BookTracker.Api.Endpoints.Auth;
 using BookTracker.Api.Endpoints.Books;
 using BookTracker.Api.Endpoints.Members;
 using BookTracker.Api.Seeding;
 using BookTracker.Api.Storage;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookTracker.Api.Wiring;
 
@@ -12,17 +14,34 @@ public static class WebApplicationExtensions
     {
         if (app.Environment.IsDevelopment())
         {
-            using var scope = app.Services.CreateScope();
+            using var scope =
+                app.Services.CreateScope();
 
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var dbContext =
+                scope.ServiceProvider
+                    .GetRequiredService<AppDbContext>();
+
+            var passwordHasher =
+                scope.ServiceProvider
+                    .GetRequiredService<
+                        IPasswordHasher<Member>>();
 
             dbContext.Database.EnsureCreated();
 
-            if (app.Configuration.GetValue<bool>("SeedDatabase"))
+            if (app.Configuration
+                .GetValue<bool>("SeedDatabase"))
             {
-                DatabaseSeeder.SeedBooks(dbContext, 500);
+                DatabaseSeeder.SeedBooks(
+                    dbContext,
+                    500);
+
+                DatabaseSeeder.SeedAdministrator(
+                    dbContext,
+                    app.Configuration,
+                    passwordHasher);
             }
         }
+
 
         app.UseAuthentication();
         app.UseAuthorization();

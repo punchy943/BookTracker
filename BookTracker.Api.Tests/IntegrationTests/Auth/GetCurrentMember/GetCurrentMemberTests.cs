@@ -69,4 +69,23 @@ public class GetCurrentMemberTests : IntegrationTest
         await response.ShouldHaveStatusCode(
             HttpStatusCode.Unauthorized);
     }
+
+    [Fact]
+    public async Task GetCurrentMemberReturnsRole()
+    {
+        await AuthenticateAsMember(
+            MemberRole.Administrator);
+
+        var response =
+            await Client.GetAsync("/auth/me");
+
+        var member =
+            await response
+                .ReadJsonAs<CurrentMemberResponse>(
+                    HttpStatusCode.OK);
+
+        Assert.Equal(
+            "Administrator",
+            member.Role);
+    }
 }

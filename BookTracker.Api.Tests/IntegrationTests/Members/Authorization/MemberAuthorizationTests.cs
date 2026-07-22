@@ -155,4 +155,172 @@ public class MemberAuthorizationTests : IntegrationTest
 
         Assert.NotNull(member);
     }
+
+    [Fact]
+    public async Task MemberListRequiresAuthentication()
+    {
+        var response =
+            await Client.GetAsync("/members");
+
+        await response.ShouldHaveStatusCode(
+            HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task RegularMemberCannotViewMemberList()
+    {
+        await AuthenticateAsMember();
+
+        var response =
+            await Client.GetAsync("/members");
+
+        await response.ShouldHaveStatusCode(
+            HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
+    public async Task AdministratorCanViewMemberList()
+    {
+        await AuthenticateAsMember(
+            MemberRole.Administrator);
+
+        var response =
+            await Client.GetAsync("/members");
+
+        await response.ShouldHaveStatusCode(
+            HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task MemberDetailsRequiresAuthentication()
+    {
+        Writer.Seed(db =>
+        {
+            db.Members.Add(
+                new Member
+                {
+                    Name = new MemberName("Lukas Motte"),
+                    Email = new MemberEmail("lukasmotte75@gmail.com"),
+                    PasswordHash = "test-password-hash"
+                });
+        });
+
+        var response =
+            await Client.GetAsync("/members/1");
+
+        await response.ShouldHaveStatusCode(
+            HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task RegularMemberCannotViewMemberDetails()
+    {
+        await AuthenticateAsMember();
+
+        Writer.Seed(db =>
+        {
+            db.Members.Add(
+                new Member
+                {
+                    Name = new MemberName("Lukas Motte"),
+                    Email = new MemberEmail("lukasmotte75@gmail.com"),
+                    PasswordHash = "test-password-hash"
+                });
+        });
+
+        var response =
+            await Client.GetAsync("/members/2");
+
+        await response.ShouldHaveStatusCode(
+            HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
+    public async Task AdministratorCanViewMemberDetails()
+    {
+        await AuthenticateAsMember(
+            MemberRole.Administrator);
+
+        Writer.Seed(db =>
+        {
+            db.Members.Add(
+                new Member
+                {
+                    Name = new MemberName("Lukas Motte"),
+                    Email = new MemberEmail("lukasmotte75@gmail.com"),
+                    PasswordHash = "test-password-hash"
+                });
+        });
+
+        var response =
+            await Client.GetAsync("/members/2");
+
+        await response.ShouldHaveStatusCode(
+            HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task AdministratorCanUpdateOtherMember()
+    {
+        Writer.Seed(db =>
+        {
+            db.Members.Add(
+                new Member
+                {
+                    Name = new MemberName("Lukas Motte"),
+                    Email = new MemberEmail("lukasmotte75@gmail.com"),
+                    PasswordHash = "test-password-hash"
+                });
+        });
+
+        await AuthenticateAsMember(
+            MemberRole.Administrator);
+
+        var request =
+            new UpdateMemberRequest
+            {
+                Name = "Changed Name",
+                Email = "changed@example.com"
+            };
+
+        var response =
+            await Client.PutAsJsonAsync(
+                $"/members/1",
+                request);
+
+        await response.ShouldHaveStatusCode(
+            HttpStatusCode.NoContent);
+
+        var member = Reader.Query(db => db.Members.Find(1));
+
+        Assert.NotNull(member);
+        Assert.Equal("Changed Name", member.Name.Value);
+        Assert.Equal("changed@example.com", member.Email.Value);
+    }
+
+    [Fact]
+    public async Task AdministratorCanDeleteOtherMember()
+    {
+        Writer.Seed(db =>
+        {
+            db.Members.Add(
+                new Member
+                {
+                    Name = new MemberName("Lukas Motte"),
+                    Email = new MemberEmail("lukasmotte75@gmail.com"),
+                    PasswordHash = "test-password-hash"
+                });
+        });
+
+        await AuthenticateAsMember(
+            MemberRole.Administrator);
+
+        var response = await Client.DeleteAsync("/members/1");
+
+        await response.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        var member = Reader.Query(db => db.Members.Find(1));
+
+        Assert.Null(member);
+    }
 }

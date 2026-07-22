@@ -31,19 +31,23 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
         modelBuilder.Entity<Member>(member =>
         {
             member.Property(m => m.Name)
-                  .HasConversion(
+                .HasConversion(
                     name => name.Value,
                     value => new MemberName(value))
-                  .HasMaxLength(MemberName.MaxLength);
+                .HasMaxLength(MemberName.MaxLength);
 
             member.Property(m => m.Email)
-                  .HasConversion(
+                .HasConversion(
                     email => email.Value,
                     value => new MemberEmail(value))
-                  .HasMaxLength(MemberEmail.MaxLength);
+                .HasMaxLength(MemberEmail.MaxLength);
 
             member.HasIndex(current => current.Email)
-            .IsUnique();
+                .IsUnique();
+
+            member.Property(current => current.Role)
+                .HasConversion<string>()
+                .HasMaxLength(50);
         });
     }
 }

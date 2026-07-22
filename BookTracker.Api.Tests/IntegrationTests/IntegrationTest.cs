@@ -50,6 +50,7 @@ public abstract class IntegrationTest : IDisposable
     }
 
     protected async Task<int> AuthenticateAsMember(
+        MemberRole role = MemberRole.Member,
         string name = "Ada Lovelace",
         string email = "ada@example.com",
         string password = "analytical-engine")
@@ -59,7 +60,8 @@ public abstract class IntegrationTest : IDisposable
             {
                 Name = new MemberName(name),
                 Email = new MemberEmail(email),
-                PasswordHash = string.Empty
+                PasswordHash = string.Empty,
+                Role = role
             };
 
         var passwordHasher = new PasswordHasher<Member>();

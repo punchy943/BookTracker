@@ -9,6 +9,9 @@ public class MemberDetailsTests : IntegrationTest
     [Fact]
     public async Task GetMemberDetailsReturnsExistingMember()
     {
+        await AuthenticateAsMember(
+            MemberRole.Administrator);
+
         Writer.Seed(db =>
         {
             db.Members.Add(
@@ -20,7 +23,7 @@ public class MemberDetailsTests : IntegrationTest
                 });
         });
 
-        var response = await Client.GetAsync("/members/1");
+        var response = await Client.GetAsync("/members/2");
 
         var member = await response.ReadJsonAs<GetMemberDetailsResponse>(HttpStatusCode.OK);
 
@@ -32,7 +35,10 @@ public class MemberDetailsTests : IntegrationTest
     [Fact]
     public async Task GetMemberReturnsNotFoundWhenIdDoesNotExist()
     {
-        var response = await Client.GetAsync("/members/1");
+        await AuthenticateAsMember(
+                    MemberRole.Administrator);
+
+        var response = await Client.GetAsync("/members/2");
 
         await response.ShouldHaveStatusCode(HttpStatusCode.NotFound);
     }

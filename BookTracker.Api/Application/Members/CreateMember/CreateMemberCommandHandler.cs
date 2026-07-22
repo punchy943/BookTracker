@@ -33,7 +33,9 @@ public class CreateMemberCommandHandler(
             new Member
             {
                 Name = name,
-                Email = email
+                Email = email,
+                PasswordHash = string.Empty,
+                Role = MemberRole.Member
             };
 
         member.PasswordHash = passwordHasher.HashPassword(member, request.Password);

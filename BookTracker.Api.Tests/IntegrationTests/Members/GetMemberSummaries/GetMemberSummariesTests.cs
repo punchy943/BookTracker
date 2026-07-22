@@ -10,13 +10,8 @@ public class GetMemberSummariesTests : IntegrationTest
     [Fact]
     public async Task GetMemberSummariesReturnsMembers()
     {
-        Writer.Seed(db => db.Members.Add(
-            new Member
-            {
-                Name = new MemberName("Lukas Motte"),
-                Email = new MemberEmail("lukasmotte75@gmail.com")
-            }
-        ));
+        await AuthenticateAsMember(
+            MemberRole.Administrator);
 
         var response = await Client.GetAsync("/members");
 
@@ -26,8 +21,8 @@ public class GetMemberSummariesTests : IntegrationTest
 
         var memberSummary = Assert.Single(result.Items);
 
-        Assert.Equal("Lukas Motte", memberSummary.Name);
-        Assert.Equal("lukasmotte75@gmail.com", memberSummary.Email);
+        Assert.Equal("Ada Lovelace", memberSummary.Name);
+        Assert.Equal("ada@example.com", memberSummary.Email);
         Assert.Equal(1, result.Page);
         Assert.Equal(10, result.PageSize);
         Assert.Equal(1, result.TotalItems);
@@ -37,6 +32,9 @@ public class GetMemberSummariesTests : IntegrationTest
     [Fact]
     public async Task GetMemberSummariesCanSearchByName()
     {
+        await AuthenticateAsMember(
+            MemberRole.Administrator);
+
         Writer.Seed(db =>
         {
             db.Members.AddRange(
@@ -67,6 +65,9 @@ public class GetMemberSummariesTests : IntegrationTest
     [Fact]
     public async Task GetMemberSummariesCanSearchByEmail()
     {
+        await AuthenticateAsMember(
+            MemberRole.Administrator);
+
         Writer.Seed(db =>
         {
             db.Members.AddRange(
@@ -98,6 +99,9 @@ public class GetMemberSummariesTests : IntegrationTest
     [Fact]
     public async Task GetMemberSummariesAppliesPagingAfterSearch()
     {
+        await AuthenticateAsMember(
+            MemberRole.Administrator);
+        
         Writer.Seed(db =>
         {
             db.Members.AddRange(

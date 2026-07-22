@@ -5,6 +5,8 @@ using BookTracker.Api.Application.Members.GetMemberDetails;
 using BookTracker.Api.Application.Members.GetMemberSummaries;
 using BookTracker.Api.Application.Members.UpdateMember;
 using BookTracker.Api.Domain;
+using BookTracker.Api.Domain.Members;
+using BookTracker.Api.Security;
 using System.Security.Claims;
 
 namespace BookTracker.Api.Endpoints.Members;
@@ -13,8 +15,14 @@ public static class MemberEndpoints
 {
     public static IEndpointRouteBuilder MapMemberEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/members", GetMemberSummaries);
-        app.MapGet("/members/{id:int}", GetMemberDetails);
+        app.MapGet("/members", GetMemberSummaries)
+            .RequireAuthorization(
+            AuthorizationPolicies.ManageMembers);
+
+        app.MapGet("/members/{id:int}", GetMemberDetails)
+            .RequireAuthorization(
+            AuthorizationPolicies.ManageMembers);
+            
         app.MapPost("/members", CreateMember);
 
         app.MapPut("/members/{id:int}", UpdateMember)
@@ -67,11 +75,11 @@ public static class MemberEndpoints
 
     public static async Task<IResult> UpdateMember(int id, UpdateMemberRequest request, ClaimsPrincipal user, UpdateMemberCommandHandler handler)
     {
-        if (!IsCurrentMember(user, id))
+        if (!CanManageMember(user, id))
         {
             return Results.Forbid();
         }
-        
+
         try
         {
             var updated = await handler.Execute(id, request);
@@ -95,7 +103,7 @@ public static class MemberEndpoints
 
     public static async Task<IResult> DeleteMember(int id, ClaimsPrincipal user, DeleteMemberCommandHandler handler)
     {
-        if (!IsCurrentMember(user, id))
+        if (!CanManageMember(user, id))
         {
             return Results.Forbid();
         }
@@ -110,14 +118,22 @@ public static class MemberEndpoints
         return Results.NoContent();
     }
 
-    private static bool IsCurrentMember(
+    private static bool CanManageMember(
         ClaimsPrincipal user,
         int memberId)
     {
-        var claim =
-            user.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (user.IsInRole(nameof(MemberRole.Administrator)))
+        {
+            return true;
+        }
 
-        return int.TryParse(claim, out var currentMemberId)
+        var claim =
+            user.FindFirstValue(
+                ClaimTypes.NameIdentifier);
+
+        return int.TryParse(
+                claim,
+                out var currentMemberId)
             && currentMemberId == memberId;
     }
 }
