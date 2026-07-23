@@ -16,13 +16,11 @@ public static class MemberEndpoints
     public static IEndpointRouteBuilder MapMemberEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("/members", GetMemberSummaries)
-            .RequireAuthorization(
-            AuthorizationPolicies.ManageMembers);
+            .RequireAuthorization();
 
         app.MapGet("/members/{id:int}", GetMemberDetails)
-            .RequireAuthorization(
-            AuthorizationPolicies.ManageMembers);
-            
+            .RequireAuthorization();
+
         app.MapPost("/members", CreateMember);
 
         app.MapPut("/members/{id:int}", UpdateMember)
@@ -35,23 +33,43 @@ public static class MemberEndpoints
     }
     public static async Task<IResult> GetMemberSummaries(
     [AsParameters] GetMemberSummariesRequest request,
-    GetMemberSummariesQueryHandler query)
+    ClaimsPrincipal principal,
+    GetMemberSummariesQueryHandler handler)
     {
-        var members = await query.Execute(request);
+        try
+        {
+            var actor = principal.ToActor();
 
-        return Results.Ok(members);
+            var response = await handler.Execute(actor, request);
+
+            return Results.Ok(response);
+        }
+        catch (ForbiddenOperationException)
+        {
+            return Results.Forbid();
+        }
     }
 
-    public static async Task<IResult> GetMemberDetails(int id, GetMemberDetailsQueryHandler query)
+    public static async Task<IResult> GetMemberDetails(int id, ClaimsPrincipal principal, GetMemberDetailsQueryHandler handler)
     {
-        var member = await query.Execute(id);
-
-        if (member is null)
+        try
         {
-            return Results.NotFound();
+            var actor = principal.ToActor();
+
+            var member = await handler.Execute(actor, id);
+
+            if (member is null)
+            {
+                return Results.NotFound();
+            }
+
+            return Results.Ok(member);
         }
 
-        return Results.Ok(member);
+        catch (ForbiddenOperationException)
+        {
+            return Results.Forbid();
+        }
     }
 
     public static async Task<IResult> CreateMember(CreateMemberRequest request, CreateMemberCommandHandler handler)
@@ -73,16 +91,13 @@ public static class MemberEndpoints
         }
     }
 
-    public static async Task<IResult> UpdateMember(int id, UpdateMemberRequest request, ClaimsPrincipal user, UpdateMemberCommandHandler handler)
+    public static async Task<IResult> UpdateMember(int id, UpdateMemberRequest request, ClaimsPrincipal principal, UpdateMemberCommandHandler handler)
     {
-        if (!CanManageMember(user, id))
-        {
-            return Results.Forbid();
-        }
-
         try
         {
-            var updated = await handler.Execute(id, request);
+            var actor = principal.ToActor();
+
+            var updated = await handler.Execute(actor, id, request);
             if (!updated)
             {
                 return Results.NotFound();
@@ -90,50 +105,41 @@ public static class MemberEndpoints
             return Results.NoContent();
         }
 
-        catch (MemberEmailAlreadyExistsException exception)
-        {
-            return Results.Conflict(new { error = exception.Message });
-        }
-
-        catch (DomainException exception)
-        {
-            return Results.BadRequest(new { error = exception.Message });
-        }
-    }
-
-    public static async Task<IResult> DeleteMember(int id, ClaimsPrincipal user, DeleteMemberCommandHandler handler)
-    {
-        if (!CanManageMember(user, id))
+        catch (ForbiddenOperationException)
         {
             return Results.Forbid();
         }
-
-        var deleted = await handler.Execute(id);
-
-        if (!deleted)
+        catch (MemberEmailAlreadyExistsException exception)
         {
-            return Results.NotFound();
+            return Results.Conflict(
+                new { error = exception.Message });
         }
-
-        return Results.NoContent();
+        catch (DomainException exception)
+        {
+            return Results.BadRequest(
+                new { error = exception.Message });
+        }
     }
 
-    private static bool CanManageMember(
-        ClaimsPrincipal user,
-        int memberId)
+    public static async Task<IResult> DeleteMember(int id, ClaimsPrincipal principal, DeleteMemberCommandHandler handler)
     {
-        if (user.IsInRole(nameof(MemberRole.Administrator)))
+        try
         {
-            return true;
+            var actor = principal.ToActor();
+
+            var deleted = await handler.Execute(actor, id);
+
+            if (!deleted)
+            {
+                return Results.NotFound();
+            }
+
+            return Results.NoContent();
         }
 
-        var claim =
-            user.FindFirstValue(
-                ClaimTypes.NameIdentifier);
-
-        return int.TryParse(
-                claim,
-                out var currentMemberId)
-            && currentMemberId == memberId;
+        catch (ForbiddenOperationException)
+        {
+            return Results.Forbid();
+        }
     }
 }
