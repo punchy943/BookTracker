@@ -32,13 +32,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hc
 DELETE http://localhost:5125/books/1
 
 ### Update Book
-PUT http://localhost:5125/books/2
+PUT http://localhost:5125/books/1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQm9vayBUcmFja2VyIEFkbWluIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWRtaW5AYm9va3RyYWNrZXIubG9jYWwiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzg1MTQ5NjcxLCJpc3MiOiJCb29rVHJhY2tlciIsImF1ZCI6IkJvb2tUcmFja2VyIn0.jbnGQ5bf9iHO_ByTs5YlI_DnoEGBmNtbYDs6_0uSvIw
 
 {
-  "title": "Changes",
-  "author": "David Bowie",
-  "year": 1971
+  "title": "Changes 2",
+  "author": "David Bowieeeee",
+  "year": 1972,
+  "version": "bc5c33ce-803f-4e86-b20e-52a7dc887adb"
 }
 
 ### Get Book by Id
@@ -58,14 +60,16 @@ Content-Type: application/json
 }
 
 ### Get Member Details
-GET http://localhost:5125/members/1
+GET http://localhost:5125/members/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRhIExvdmVsYWNlIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWRhLmJ5cm9uQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiTWVtYmVyIiwiZXhwIjoxNzg0ODgxMjgzLCJpc3MiOiJCb29rVHJhY2tlciIsImF1ZCI6IkJvb2tUcmFja2VyIn0.Dp_xDnUQAcost0sHCiEZGWHSKM8Uz3p0scR2uQcsCAQ
 
 ### Update Member
-PUT http://localhost:5125/members/1
+PUT http://localhost:5125/members/2
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRhIExvdmVsYWNlIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWRhQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiTWVtYmVyIiwiZXhwIjoxNzg0ODgxMDgzLCJpc3MiOiJCb29rVHJhY2tlciIsImF1ZCI6IkJvb2tUcmFja2VyIn0.wd21j7BeYKz2HLmnk4pA3Am49KWKjyqo5XZzvIgJTD0
 
 {
-  "name": "Ada Byron",
+  "name": "Ada Lovelace",
   "email": "ada.byron@example.com"
 }
 
@@ -83,4 +87,14 @@ Content-Type: application/json
 
 ### Current member
 GET http://localhost:5125/auth/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRhIExvdmVsYWNlIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWRhQGV4YW1wbGUuY29tIiwiZXhwIjoxNzg0NTQzMjIwLCJpc3MiOiJCb29rVHJhY2tlciIsImF1ZCI6IkJvb2tUcmFja2VyIn0.JYfwROPhgkkGL2keFM3mkS1bY2FhdHwN9BRjoJWZ73I
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRhIEJ5cm9uIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWRhLmJ5cm9uQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiTWVtYmVyIiwiZXhwIjoxNzg0ODgxMTc4LCJpc3MiOiJCb29rVHJhY2tlciIsImF1ZCI6IkJvb2tUcmFja2VyIn0.q5MbLUcTee8X51ROj987FIVKWRNwFCLT4u3HRK4EL3Q
+
+
+### Login as administrator
+POST http://localhost:5125/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@booktracker.local",
+  "password": "development-admin-password"
+}

@@ -6,10 +6,10 @@ namespace BookTracker.Api.Application.Books.UpdateBook;
 
 public class UpdateBookCommandHandler(IBookRepository bookRepository) : IHandler
 {
-    public async Task<bool> Execute(Actor actor, int id, UpdateBookRequest request)
+    public async Task<UpdateBookResult> Execute(Actor actor, int id, UpdateBookRequest request)
     {
         BookPermissions.EnsureCanManage(actor);
-        
+
         var book =
             new Book
             {
@@ -19,6 +19,6 @@ public class UpdateBookCommandHandler(IBookRepository bookRepository) : IHandler
                 Year = request.Year
             };
 
-        return await bookRepository.UpdateAsync(book);
+        return await bookRepository.UpdateAsync(book, request.Version);
     }
 }
