@@ -1,7 +1,13 @@
 import type { PagedResult } from "../types";
-import type { BookSummary, GetBooksRequest, BookDetails, CreateBookRequest, CreateBookResponse, UpdateBookRequest } from "./types";
+import type {
+  BookSummary,
+  GetBooksRequest,
+  BookDetails,
+  CreateBookRequest,
+  CreateBookResponse,
+  UpdateBookRequest,
+} from "./types";
 import { apiRequest, apiRequestWithoutResponse } from "../api";
-
 
 export function getBooks(request: GetBooksRequest) {
   const parameters = new URLSearchParams({
@@ -32,6 +38,12 @@ export function createBook(request: CreateBookRequest) {
 export function updateBook(bookId: number, request: UpdateBookRequest) {
   return apiRequestWithoutResponse(`/books/${bookId}`, {
     method: "PUT",
-    body: JSON.stringify(request)
+    body: JSON.stringify(request),
+  });
+}
+
+export function deleteBook(bookId: number) {
+  return apiRequestWithoutResponse(`/books/${bookId}`, {
+    method: "DELETE",
   });
 }
