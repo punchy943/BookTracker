@@ -1,7 +1,8 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import type { FormEvent } from "react";
+import type { SubmitEvent } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { getBooks } from "./booksApi";
+import { CreateBookLink } from "./CreateBookLink";
 
 const pageSize = 10;
 
@@ -32,7 +33,7 @@ export function BookListPage() {
     setSearchParams(next);
   }
 
-  function handleSearch(event: FormEvent<HTMLFormElement>) {
+  function handleSearch(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const next = new URLSearchParams();
     const formData = new FormData(event.currentTarget);
@@ -58,6 +59,7 @@ export function BookListPage() {
   return (
     <main>
       <h1>Books</h1>
+      <CreateBookLink />
       <form key={search} onSubmit={handleSearch}>
         <label>
           Search by title or author

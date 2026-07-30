@@ -1,6 +1,6 @@
-import { apiRequest } from "../api";
 import type { PagedResult } from "../types";
-import type { BookSummary, GetBooksRequest, BookDetails } from "./types";
+import type { BookSummary, GetBooksRequest, BookDetails, CreateBookRequest, CreateBookResponse, UpdateBookRequest } from "./types";
+import { apiRequest, apiRequestWithoutResponse } from "../api";
 
 
 export function getBooks(request: GetBooksRequest) {
@@ -20,4 +20,18 @@ export function getBooks(request: GetBooksRequest) {
 
 export function getBook(bookId: number) {
   return apiRequest<BookDetails>(`/books/${bookId}`);
+}
+
+export function createBook(request: CreateBookRequest) {
+  return apiRequest<CreateBookResponse>("/books", {
+    method: "POST",
+    body: JSON.stringify(request),
+  });
+}
+
+export function updateBook(bookId: number, request: UpdateBookRequest) {
+  return apiRequestWithoutResponse(`/books/${bookId}`, {
+    method: "PUT",
+    body: JSON.stringify(request)
+  });
 }
