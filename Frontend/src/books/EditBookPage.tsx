@@ -4,15 +4,11 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { ApiError } from "../api";
 import { getBook, updateBook } from "./booksApi";
 import type { UpdateBookRequest } from "./types";
-
-function readBookId(value: string | undefined) {
-  const bookId = Number(value);
-  return Number.isInteger(bookId) && bookId > 0 ? bookId : null;
-}
+import { ReadId } from "../RouteUtils";
 
 export function EditBookPage() {
   const { bookId: bookIdParameter } = useParams();
-  const bookId = readBookId(bookIdParameter);
+  const bookId = ReadId(bookIdParameter);
   const [formError, setFormError] = useState<string | null>(null);
   const queryClient = useQueryClient();
   const navigate = useNavigate();

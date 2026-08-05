@@ -7,13 +7,13 @@ public class GetBookSummariesQueryHandler(AppDbContext dbContext) : IHandler
 {
     private const int DefaultPage = 1;
     private const int DefaultPageSize = 10;
-    private const int MinPage = 1;
+    private const int MinPageSize = 1;
     private const int MaxPageSize = 50;
 
     public async Task<PagedResult<BookSummary>> Execute(GetBookSummariesRequest request)
     {
         var page = Math.Max(1, request.Page ?? DefaultPage);
-        var pageSize = Math.Clamp(request.PageSize ?? DefaultPageSize, MinPage, MaxPageSize);
+        var pageSize = Math.Clamp(request.PageSize ?? DefaultPageSize, MinPageSize, MaxPageSize);
 
         var query = dbContext.Books.AsNoTracking();
 

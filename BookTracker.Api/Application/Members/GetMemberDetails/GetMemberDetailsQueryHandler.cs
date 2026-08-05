@@ -20,6 +20,7 @@ public class GetMemberDetailsQueryHandler(AppDbContext dbContext) : IHandler
                     Id = member.Id,
                     Name = member.Name.Value,
                     Email = member.Email.Value,
+                    Role = member.Role.ToString()
                 })
             .FirstOrDefaultAsync();
     }

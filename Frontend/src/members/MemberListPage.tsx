@@ -1,18 +1,17 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { SubmitEvent } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import { getBooks } from "./booksApi";
-import { CreateBookLink } from "./CreateBookLink";
+import { useSearchParams, Link } from "react-router-dom";
+import { getMembers } from "./membersApi";
 import { ReadPage, pageSize } from "../RouteUtils";
 
-export function BookListPage() {
+export function MemberListPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = ReadPage(searchParams.get("page"));
   const search = searchParams.get("search")?.trim() ?? "";
 
-  const booksQuery = useQuery({
-    queryKey: ["books", { page, pageSize, search }],
-    queryFn: () => getBooks({ page, pageSize, search }),
+  const memberQuery = useQuery({
+    queryKey: ["members", { page, pageSize, search }],
+    queryFn: () => getMembers({ page, pageSize, search }),
     placeholderData: keepPreviousData,
   });
 
@@ -41,59 +40,58 @@ export function BookListPage() {
     setSearchParams(next);
   }
 
-  if (booksQuery.isPending) {
-    return <p>Loading books...</p>;
+  if (memberQuery.isPending) {
+    return <p>Loading members...</p>;
   }
 
-  if (booksQuery.isError) {
-    return <p>Could not load the books. Is the API running?</p>;
+  if (memberQuery.isError) {
+    return <p>Could not load the members. Is the API running?</p>;
   }
 
-  const result = booksQuery.data;
+  const result = memberQuery.data;
 
   return (
     <main>
-      <h1>Books</h1>
-      <CreateBookLink />
+      <h1>Members</h1>
       <form key={search} onSubmit={handleSearch}>
         <label>
-          Search by title or author
+          Search by name or email
           <input type="search" name="search" defaultValue={search} />
         </label>
         <button type="submit">Search</button>
       </form>
       {result.items.length === 0 ? (
-        <p>No books found.</p>
+        <p>No members found.</p>
       ) : (
         <ul>
-          {result.items.map((book) => (
-            <li key={book.id}>
-              <Link to={`/books/${book.id}`}>
-                <strong>{book.title}</strong> by {book.author}
+          {result.items.map((member) => (
+            <li key={member.id}>
+              <Link to={`/members/${member.id}`}>
+                <strong>{member.name}</strong> || {member.email}
               </Link>
             </li>
           ))}
         </ul>
       )}
       <p>
-        Page {result.page} of {result.totalPages}. {result.totalItems} books
+        Page {result.page} of {result.totalPages}. {result.totalItems} members
         found.
       </p>
       <button
         type="button"
         onClick={() => setPage(result.page - 1)}
-        disabled={result.page <= 1 || booksQuery.isFetching}
+        disabled={result.page <= 1 || memberQuery.isFetching}
       >
         Previous
       </button>{" "}
       <button
         type="button"
         onClick={() => setPage(result.page + 1)}
-        disabled={result.page >= result.totalPages || booksQuery.isFetching}
+        disabled={result.page >= result.totalPages || memberQuery.isFetching}
       >
         Next
       </button>
-      {booksQuery.isFetching && <p>Updating books...</p>}
+      {memberQuery.isFetching && <p>Updating members...</p>}
     </main>
   );
 }

@@ -9,7 +9,7 @@ public class GetMemberSummariesQueryHandler(AppDbContext dbContext) : IHandler
 {
     private const int DefaultPage = 1;
     private const int DefaultPageSize = 10;
-    private const int MinPage = 1;
+    private const int MinPageSize = 1;
     private const int MaxPageSize = 50;
 
     public async Task<PagedResult<MemberSummary>> Execute(Actor actor, GetMemberSummariesRequest request)
@@ -17,7 +17,7 @@ public class GetMemberSummariesQueryHandler(AppDbContext dbContext) : IHandler
         MemberPermissions.EnsureCanViewDirectory(actor);
 
         var page = Math.Max(1, request.Page ?? DefaultPage);
-        var pageSize = Math.Clamp(request.PageSize ?? DefaultPageSize, MinPage, MaxPageSize);
+        var pageSize = Math.Clamp(request.PageSize ?? DefaultPageSize, MinPageSize, MaxPageSize);
 
         var query = dbContext.Members.AsNoTracking();
 

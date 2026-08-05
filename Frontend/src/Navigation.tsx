@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { LogoutButton } from "./auth/LogoutButton";
 import { useAccessToken } from "./auth/tokenStorage";
 import { useCurrentMember } from "./auth/useCurrentMember";
+import { MembersLink } from "./MembersLink";
 
 export function Navigation() {
   const currentMemberQuery = useCurrentMember();
@@ -9,13 +10,14 @@ export function Navigation() {
 
   return (
     <nav>
+
       <Link to="/">Home</Link>{" "}
       <Link to="/books">Books</Link>{" "}
 
       {!hasToken && (
         <>
           <Link to="/register">Register</Link>{" "}
-          <Link to="/login">Log in</Link>
+          <Link to="/login">Log in</Link>{" "}
         </>
       )}
 
@@ -25,12 +27,18 @@ export function Navigation() {
 
       {hasToken && currentMemberQuery.isSuccess && (
         <>
-          <Link to="/account">Account</Link>{" "}
-          <LogoutButton />
+          <MembersLink></MembersLink>
+          <Link to="/account">Account </Link>{" "}
+          <LogoutButton/>
         </>
       )}
 
-      {hasToken && currentMemberQuery.isError && <LogoutButton />}
+      {hasToken && currentMemberQuery.isError && (
+        <>
+          <LogoutButton/>
+        </>
+      )}
+      
     </nav>
   );
 }

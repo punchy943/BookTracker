@@ -8,6 +8,8 @@ import { CreateBookPage } from "./books/CreateBookPage";
 import { EditBookPage } from "./books/EditBookPage";
 import { RegisterPage } from "./members/RegisterPage";
 import { Navigation } from "./Navigation";
+import { MemberListPage } from "./members/MemberListPage";
+import { MemberDetailsPage } from "./members/MemberDetailsPage";
 
 function HomePage() {
   return <h1>Book Tracker</h1>;
@@ -21,12 +23,14 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/account" element={<AccountPage />} />
         <Route path="/books" element={<BookListPage />} />
-        <Route path="/register" element={<RegisterPage />} />
         <Route element={<RequireAdministrator />}>
           <Route path="/books/new" element={<CreateBookPage />} />
           <Route path="/books/:bookId/edit" element={<EditBookPage />} />
+          <Route path="/members" element={<MemberListPage />} />
+          <Route path="/members/:memberId" element={<MemberDetailsPage />} />
         </Route>
         <Route path="/books/:bookId" element={<BookDetailsPage />} />
       </Routes>

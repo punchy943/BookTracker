@@ -4,15 +4,13 @@ import { ApiError } from "../api";
 import { getBook } from "./booksApi";
 import { EditBookLink } from "./EditBookLink";
 import { DeleteBookButton } from "./DeleteBookButton";
+import { ReadId } from "../RouteUtils";
 
-function readBookId(value: string | undefined) {
-  const bookId = Number(value);
-  return Number.isInteger(bookId) && bookId > 0 ? bookId : null;
-}
+
 
 export function BookDetailsPage() {
   const { bookId: bookIdParameter } = useParams();
-  const bookId = readBookId(bookIdParameter);
+  const bookId = ReadId(bookIdParameter);
 
   const bookQuery = useQuery({
     queryKey: ["books", "detail", bookId],

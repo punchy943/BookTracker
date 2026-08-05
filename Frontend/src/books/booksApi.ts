@@ -1,15 +1,15 @@
 import type { PagedResult } from "../types";
 import type {
   BookSummary,
-  GetBooksRequest,
+  GetBookSummariesRequest,
   BookDetails,
   CreateBookRequest,
   CreateBookResponse,
-  UpdateBookRequest,
+  UpdateBookRequest
 } from "./types";
 import { apiRequest, apiRequestWithoutResponse } from "../api";
 
-export function getBooks(request: GetBooksRequest) {
+export function getBooks(request: GetBookSummariesRequest) {
   const parameters = new URLSearchParams({
     page: request.page.toString(),
     pageSize: request.pageSize.toString(),

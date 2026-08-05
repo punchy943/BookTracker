@@ -4,7 +4,7 @@ export type BookSummary = {
   author: string;
 };
 
-export type GetBooksRequest = {
+export type GetBookSummariesRequest = {
   page: number;
   pageSize: number;
   search: string;
