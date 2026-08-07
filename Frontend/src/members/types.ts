@@ -28,3 +28,8 @@ export type MemberDetails = {
     email: string;
     role: string;
 }
+
+export type UpdateMemberRequest = {
+    name: string; 
+    email: string;
+}

@@ -1,10 +1,11 @@
-import { apiRequest } from "../api";
-import type { 
-  RegisterMemberRequest, 
-  RegisterMemberResponse, 
-  MemberSummary, 
-  GetMemberSummariesRequest, 
-  MemberDetails
+import { apiRequest, apiRequestWithoutResponse } from "../api";
+import { 
+  type RegisterMemberRequest, 
+  type RegisterMemberResponse, 
+  type MemberSummary, 
+  type GetMemberSummariesRequest, 
+  type MemberDetails,
+  type UpdateMemberRequest
 } from "./types";
 import type { PagedResult } from "../types";
 
@@ -32,4 +33,11 @@ export function getMembers(request: GetMemberSummariesRequest) {
 
 export function getMember(memberId: number) {
   return apiRequest<MemberDetails>(`/members/${memberId}`);
+}
+
+export function updateMember(memberId: number, request: UpdateMemberRequest) {
+  return apiRequestWithoutResponse(`/members/${memberId}`, {
+    method: "PUT",
+    body: JSON.stringify(request)
+  });
 }

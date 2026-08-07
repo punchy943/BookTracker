@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { ApiError } from "../api";
 import { getMember } from "./membersApi";
 import { ReadId } from "../RouteUtils";
+import { EditMemberLink } from "./EditMemberLink";
 
 export function MemberDetailsPage() {
   const { memberId: memberIdParameter } = useParams();
@@ -65,6 +66,7 @@ export function MemberDetailsPage() {
       <h1>{member.name}</h1>
       <p>Email: {member.email}</p>
       <p>Role: {member.role}</p>
+      <EditMemberLink memberId={member.id}></EditMemberLink>
     </main>
   );
 }

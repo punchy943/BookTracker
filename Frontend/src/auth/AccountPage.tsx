@@ -2,6 +2,7 @@ import { Navigate } from "react-router-dom";
 import { ApiError } from "../api";
 import { getAccessToken} from "./tokenStorage";
 import { useCurrentMember } from "./useCurrentMember";
+import { EditMemberLink } from "../members/EditMemberLink";
 
 export function AccountPage() {
   const currentMemberQuery = useCurrentMember();
@@ -33,6 +34,7 @@ export function AccountPage() {
       <h1>{member.name}</h1>
       <p>{member.email}</p>
       <p>Role: {member.role}</p>
+      <EditMemberLink memberId={member.id}></EditMemberLink>
     </main>
   );
 }
