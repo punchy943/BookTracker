@@ -1,8 +1,40 @@
 ﻿@page "/"
 @page "/booktracker"
 
-<PageTitle>Book Tracker</PageTitle>
+@using BookTracker.Blazor.Components.Books
+@using BookTracker.Blazor.Models.Books
 
-<h1>Book Tracker</h1>
+<button @onclick="ToggleAuthors">Toon of verberg auteurs</button>
 
-<p>Deze pagina wordt door een Razor component gerenderd.</p>
+@foreach(var book in books)
+{
+    <BookSummaryCard Book="book"
+                 ShowAuthor="showAuthors"
+                 OnSelected="SelectBook" />
+}
+@if (selectedBookId is not null)
+    {
+        <p>Geselecteerd boek: @selectedBookId</p>
+    }
+
+@code {
+    private readonly IReadOnlyList<BookSummary> books =
+    [
+        new() { Id = 1, Title = "Dune", Author = "Frank Herbert" },
+        new() { Id = 2, Title = "The Big Sleep", Author = "Raymond Chandler" }
+    ];
+    private bool showAuthors = true;
+
+    private void ToggleAuthors()
+    {
+        showAuthors = !showAuthors;
+    }
+
+    private int? selectedBookId;
+
+    private void SelectBook(int bookId)
+    {
+        selectedBookId = bookId;
+    }
+}
+
