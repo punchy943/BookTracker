@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Api", "BookTrac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Api.Tests", "BookTracker.Api.Tests\BookTracker.Api.Tests.csproj", "{8D55CFE5-DED0-4D7F-A9D9-378621B11532}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Blazor", "BookTracker.Blazor\BookTracker.Blazor.csproj", "{58FFCE40-1267-4E25-B62C-839ED0F5021D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{8D55CFE5-DED0-4D7F-A9D9-378621B11532}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D55CFE5-DED0-4D7F-A9D9-378621B11532}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D55CFE5-DED0-4D7F-A9D9-378621B11532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58FFCE40-1267-4E25-B62C-839ED0F5021D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58FFCE40-1267-4E25-B62C-839ED0F5021D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58FFCE40-1267-4E25-B62C-839ED0F5021D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58FFCE40-1267-4E25-B62C-839ED0F5021D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
