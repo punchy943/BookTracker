@@ -1,28 +1,112 @@
 ﻿@page "/"
 @page "/booktracker"
 
+@inject BookTrackerClient BookTrackerClient
+
 @using BookTracker.Blazor.Components.Books
 @using BookTracker.Blazor.Models.Books
+@using BookTracker.Blazor.Api
 
-<button @onclick="ToggleAuthors">Toon of verberg auteurs</button>
+<form @onsubmit="HandleSearch">
+    <input @bind="searchInput" placeholder="Search books..." />
+    <button type="submit">Zoeken</button>
+</form>
 
-@foreach(var book in books)
+@if (loading)
 {
-    <BookSummaryCard Book="book"
-                 ShowAuthor="showAuthors"
-                 OnSelected="SelectBook" />
+    <p>Boeken laden...</p>
 }
-@if (selectedBookId is not null)
+@if (error is not null)
+{
+    <p>@error</p>
+}
+@if (result is not null)
+{
+    <button @onclick="ToggleAuthors">Toon of verberg auteurs</button>
+
+    @if (result.Items.Count == 0)
+    {
+        <p>Geen boeken gevonden.</p>
+    }
+    @foreach(var book in result.Items)
+    {
+        <BookSummaryCard 
+        Book="book"
+        ShowAuthor="showAuthors"
+        OnSelected="SelectBook" />
+    }
+    
+    <button type="button" @onclick="GoToPreviousPage" disabled="@(result.Page <= 1)">
+        Vorige
+    </button>
+    <span>Pagina @result.Page van @result.TotalPages</span>
+    <button type="button" @onclick="GoToNextPage" disabled="@(result.Page >= result.TotalPages)">
+        Volgende
+    </button>
+
+    @if (selectedBookId is not null)
     {
         <p>Geselecteerd boek: @selectedBookId</p>
     }
+} 
+
 
 @code {
-    private readonly IReadOnlyList<BookSummary> books =
-    [
-        new() { Id = 1, Title = "Dune", Author = "Frank Herbert" },
-        new() { Id = 2, Title = "The Big Sleep", Author = "Raymond Chandler" }
-    ];
+    private GetBookSummariesResponse? result;
+    private int page = 1;
+    private int PageSize = 10; 
+    private string? search;
+    private string? searchInput;
+    private bool loading; 
+    private string? error; 
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadBooks();
+    }
+    private async Task GoToPreviousPage()
+    {
+        if (page <= 1)
+        {
+            return;
+        }
+
+        page--;
+        await LoadBooks();
+    }
+
+    private async Task GoToNextPage()
+    {
+        if (result is null || page >= result.TotalPages)
+        {
+            return;
+        }
+
+        page++;
+        await LoadBooks();
+    }
+    private async Task LoadBooks()
+    {
+        loading = true; 
+        error = null;
+        try 
+        {
+            result = await BookTrackerClient.GetBooks(search, page, PageSize);
+        }
+        catch 
+        {
+            error = "Could not load books. Is the API running?";
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+    private async Task HandleSearch()
+    {
+        search = searchInput;
+        page = 1;
+        await LoadBooks();
+    }
     private bool showAuthors = true;
 
     private void ToggleAuthors()
