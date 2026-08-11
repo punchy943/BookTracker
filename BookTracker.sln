@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Api.Tests", "Bo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Blazor", "BookTracker.Blazor\BookTracker.Blazor.csproj", "{58FFCE40-1267-4E25-B62C-839ED0F5021D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Blazor.Tests", "BookTracker.Blazor.Tests\BookTracker.Blazor.Tests.csproj", "{1BE20959-5DFD-4355-8789-01A766543177}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{58FFCE40-1267-4E25-B62C-839ED0F5021D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58FFCE40-1267-4E25-B62C-839ED0F5021D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58FFCE40-1267-4E25-B62C-839ED0F5021D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BE20959-5DFD-4355-8789-01A766543177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BE20959-5DFD-4355-8789-01A766543177}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BE20959-5DFD-4355-8789-01A766543177}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BE20959-5DFD-4355-8789-01A766543177}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
