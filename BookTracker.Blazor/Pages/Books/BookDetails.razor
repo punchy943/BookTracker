@@ -1,0 +1,63 @@
+@page "/books/{Id:int}"
+
+@inject BookTrackerClient BookTrackerClient
+@inject NavigationManager NavigationManager
+
+@using BookTracker.Blazor.Api
+@using BookTracker.Blazor.Models.Books
+
+<a href = "/">Terug naar boeken</a>
+
+@if (loading)
+{
+    <p>Boek laden...</p>
+}
+@if (notFound)
+{
+    <p>Boek met Id @Id niet gevonden.</p>
+}
+@if (error is not null)
+{
+    <p>@error</p>
+}
+@if (result is not null)
+{
+    <h2>@result.Title</h2>
+    <p>Auteur: @result.Author</p>
+    <p>Jaar: @result.Year</p>
+}
+
+@code{
+    [Parameter]
+    public int Id { get; set; }
+
+    private BookDetailsResponse? result; 
+    private bool loading; 
+    private bool notFound; 
+    private string? error;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        loading = true;
+        notFound = false; 
+        error = null; 
+
+        try 
+        {
+            result = await BookTrackerClient.GetBookDetails(Id);
+
+            if (result is null)
+            {
+                notFound = true;
+            }
+        }
+        catch 
+        {
+            error = "Could not load book. Is the API running?";
+        }
+        finally 
+        {
+            loading = false; 
+        }
+    } 
+}

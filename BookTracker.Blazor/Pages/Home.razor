@@ -2,6 +2,7 @@
 @page "/booktracker"
 
 @inject BookTrackerClient BookTrackerClient
+@inject NavigationManager NavigationManager
 
 @using BookTracker.Blazor.Components.Books
 @using BookTracker.Blazor.Models.Books
@@ -14,7 +15,7 @@
 
 @if (loading)
 {
-    <p>Boeken laden...</p>
+    <p id = "status">Boeken laden...</p>
 }
 @if (error is not null)
 {
@@ -22,31 +23,29 @@
 }
 @if (result is not null)
 {
-    <button @onclick="ToggleAuthors">Toon of verberg auteurs</button>
+    <button id = "ToggleAuthors" @onclick="ToggleAuthors">Toon of verberg auteurs</button>
 
     @if (result.Items.Count == 0)
     {
         <p>Geen boeken gevonden.</p>
     }
-    @foreach(var book in result.Items)
+    else 
     {
-        <BookSummaryCard 
-        Book="book"
-        ShowAuthor="showAuthors"
-        OnSelected="SelectBook" />
-    }
+        @foreach(var book in result.Items)
+        {
+            <BookSummaryCard 
+            Book="book"
+            ShowAuthor="showAuthors"
+            OnSelected="SelectBook" />
+        }
     
-    <button type="button" @onclick="GoToPreviousPage" disabled="@(result.Page <= 1)">
-        Vorige
-    </button>
-    <span>Pagina @result.Page van @result.TotalPages</span>
-    <button type="button" @onclick="GoToNextPage" disabled="@(result.Page >= result.TotalPages)">
-        Volgende
-    </button>
-
-    @if (selectedBookId is not null)
-    {
-        <p>Geselecteerd boek: @selectedBookId</p>
+        <button type="button" @onclick="GoToPreviousPage" disabled="@(result.Page <= 1)">
+            Vorige
+        </button>
+        <span>Pagina @result.Page van @result.TotalPages</span>
+        <button type="button" @onclick="GoToNextPage" disabled="@(result.Page >= result.TotalPages)">
+            Volgende
+        </button>
     }
 } 
 
@@ -63,6 +62,7 @@
     {
         await LoadBooks();
     }
+
     private async Task GoToPreviousPage()
     {
         if (page <= 1)
@@ -73,7 +73,6 @@
         page--;
         await LoadBooks();
     }
-
     private async Task GoToNextPage()
     {
         if (result is null || page >= result.TotalPages)
@@ -107,18 +106,16 @@
         page = 1;
         await LoadBooks();
     }
-    private bool showAuthors = true;
 
+    private bool showAuthors = true;
     private void ToggleAuthors()
     {
         showAuthors = !showAuthors;
     }
 
-    private int? selectedBookId;
-
     private void SelectBook(int bookId)
     {
-        selectedBookId = bookId;
+        NavigationManager.NavigateTo($"/books/{bookId}");
     }
 }
 
