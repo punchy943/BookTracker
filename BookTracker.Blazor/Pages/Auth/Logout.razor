@@ -1,0 +1,14 @@
+@page "/logout"
+
+@inject IAuthSession AuthSession
+@inject NavigationManager NavigationManager
+
+@using BookTracker.Blazor.Auth
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthSession.ClearTokenAsync();
+        NavigationManager.NavigateTo("/booktracker");
+    }
+}
